@@ -60,6 +60,9 @@ Source('output.cc')
 Source('pixel.cc')
 GTest('pixeltest', 'pixeltest.cc', 'pixel.cc')
 Source('pollevent.cc')
+### MPINHO 14-sep-2018 #A89908CA# BEGIN ##
+Source('precision.cc')
+### MPINHO 14-sep-2018 #A89908CA# END ##
 Source('random.cc')
 if env['TARGET_ISA'] != 'null':
     Source('remote_gdb.cc')

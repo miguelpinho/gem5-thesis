@@ -71,6 +71,9 @@ if 'O3CPU' in env['CPU_MODELS']:
     DebugFlag('Scoreboard')
     DebugFlag('StoreSet')
     DebugFlag('Writeback')
+    ### MPINHO 13-sep-2018 #D3922AD7# BEGIN ###
+    DebugFlag('Precision')
+    ### MPINHO 13-sep-2018 #D3922AD7# END ###
 
     CompoundFlag('O3CPUAll', [ 'Fetch', 'Decode', 'Rename', 'IEW', 'Commit',
         'IQ', 'ROB', 'FreeList', 'LSQ', 'LSQUnit', 'StoreSet', 'MemDepUnit',

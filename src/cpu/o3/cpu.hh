@@ -801,6 +801,12 @@ class FullO3CPU : public BaseO3CPU
     //number of misc
     Stats::Scalar miscRegfileReads;
     Stats::Scalar miscRegfileWrites;
+
+    /// MPINHO 13-sep-2018 #28752084# BEGIN ///
+    /** Stat for the precision of integer values from/to the register file */
+    Stats::Distribution intPrecisionRegfileReads;
+    Stats::Distribution intPrecisionRegfileWrites;
+    /// MPINHO 13-sep-2018 #28752084# END ///
 };
 
 #endif // __CPU_O3_CPU_HH__

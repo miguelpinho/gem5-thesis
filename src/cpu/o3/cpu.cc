@@ -48,6 +48,7 @@
 
 #include "arch/generic/traits.hh"
 #include "arch/kernel_stats.hh"
+#include "base/precision.hh" /// MPINHO 13-sep-2018 #13C65B93# ///
 #include "config/the_isa.hh"
 #include "cpu/activity.hh"
 #include "cpu/checker/cpu.hh"
@@ -60,6 +61,7 @@
 #include "debug/Activity.hh"
 #include "debug/Drain.hh"
 #include "debug/O3CPU.hh"
+#include "debug/Precision.hh" /// MPINHO 13-sep-2018 #13C65B93# ///
 #include "debug/Quiesce.hh"
 #include "enums/MemoryMode.hh"
 #include "sim/core.hh"
@@ -427,8 +429,10 @@ FullO3CPU<Impl>::regProbePoints()
 {
     BaseCPU::regProbePoints();
 
-    ppInstAccessComplete = new ProbePointArg<PacketPtr>(getProbeManager(), "InstAccessComplete");
-    ppDataAccessComplete = new ProbePointArg<std::pair<DynInstPtr, PacketPtr> >(getProbeManager(), "DataAccessComplete");
+    ppInstAccessComplete = new ProbePointArg<PacketPtr>(
+            getProbeManager(), "InstAccessComplete");
+    ppDataAccessComplete = new ProbePointArg<std::pair<DynInstPtr,
+            PacketPtr> >(getProbeManager(), "DataAccessComplete");
 
     fetch.regProbePoints();
     rename.regProbePoints();
@@ -557,6 +561,18 @@ FullO3CPU<Impl>::regStats()
         .name(name() + ".misc_regfile_writes")
         .desc("number of misc regfile writes")
         .prereq(miscRegfileWrites);
+
+    /// MPINHO 13-sep-2018 #7B667090# BEGIN ///
+    intPrecisionRegfileReads.init(0, 64, 1)
+        .name(name() + ".int_precision_regfile_reads")
+        .desc("precision (bits) of integer regfile reads")
+        .flags(Stats::pdf);
+
+    intPrecisionRegfileWrites.init(0, 64, 1)
+        .name(name() + ".int_precision_regfile_writes")
+        .desc("precision (bits) of integer regfile writes")
+        .flags(Stats::pdf);
+    /// MPINHO 13-sep-2018 #7B667090# END ///
 }
 
 template <class Impl>
@@ -1280,7 +1296,16 @@ uint64_t
 FullO3CPU<Impl>::readIntReg(PhysRegIdPtr phys_reg)
 {
     intRegfileReads++;
-    return regFile.readIntReg(phys_reg);
+
+    /// MPINHO 13-sep-2018 #DB9FB659# BEGIN ///
+    uint64_t val = regFile.readIntReg(phys_reg);
+    unsigned prc = intPrecision(val);
+
+    DPRINTF(Precision, "RegFile read precision (bits): %i\n", prc);
+    intPrecisionRegfileReads.sample(prc);
+
+    return val;
+    /// MPINHO 13-sep-2018 #DB9FB659# END ///
 }
 
 template <class Impl>
@@ -1338,6 +1363,14 @@ void
 FullO3CPU<Impl>::setIntReg(PhysRegIdPtr phys_reg, uint64_t val)
 {
     intRegfileWrites++;
+
+    /// MPINHO 13-sep-2018 #6B3D392D# BEGIN ///
+    unsigned prc = intPrecision(val);
+
+    DPRINTF(Precision, "RegFile write precision (bits):%i\n", prc);
+    intPrecisionRegfileWrites.sample(prc);
+    /// MPINHO 13-sep-2018 #6B3D392D# END ///
+
     regFile.setIntReg(phys_reg, val);
 }
 
@@ -1389,7 +1422,15 @@ FullO3CPU<Impl>::readArchIntReg(int reg_idx, ThreadID tid)
     PhysRegIdPtr phys_reg = commitRenameMap[tid].lookup(
             RegId(IntRegClass, reg_idx));
 
-    return regFile.readIntReg(phys_reg);
+    /// MPINHO 14-sep-2018 #DB9FB659# BEGIN ///
+    uint64_t val = regFile.readIntReg(phys_reg);
+    unsigned prc = intPrecision(val);
+
+    DPRINTF(Precision, "RegFile read precision (bits): %i\n", prc);
+    intPrecisionRegfileReads.sample(prc);
+
+    return val;
+    /// MPINHO 14-sep-2018 #DB9FB659# END ///
 }
 
 template <class Impl>
@@ -1460,6 +1501,14 @@ void
 FullO3CPU<Impl>::setArchIntReg(int reg_idx, uint64_t val, ThreadID tid)
 {
     intRegfileWrites++;
+
+    /// MPINHO 14-sep-2018 #6B3D392D# BEGIN ///
+    unsigned prc = intPrecision(val);
+
+    DPRINTF(Precision, "RegFile write precision (bits):%i\n", prc);
+    intPrecisionRegfileWrites.sample(prc);
+    /// MPINHO 14-sep-2018 #6B3D392D# END ///
+
     PhysRegIdPtr phys_reg = commitRenameMap[tid].lookup(
             RegId(IntRegClass, reg_idx));
 
@@ -1741,7 +1790,8 @@ FullO3CPU<Impl>::dumpInsts()
     while (inst_list_it != instList.end()) {
         cprintf("Instruction:%i\nPC:%#x\n[tid:%i]\n[sn:%lli]\nIssued:%i\n"
                 "Squashed:%i\n\n",
-                num, (*inst_list_it)->instAddr(), (*inst_list_it)->threadNumber,
+                num, (*inst_list_it)->instAddr(),
+                (*inst_list_it)->threadNumber,
                 (*inst_list_it)->seqNum, (*inst_list_it)->isIssued(),
                 (*inst_list_it)->isSquashed());
         inst_list_it++;
