@@ -1297,15 +1297,15 @@ FullO3CPU<Impl>::readIntReg(PhysRegIdPtr phys_reg)
 {
     intRegfileReads++;
 
-    /// MPINHO 13-sep-2018 #DB9FB659# BEGIN ///
+    /// MPINHO 20-oct-2018 #DB9FB659# BEGIN ///
     uint64_t val = regFile.readIntReg(phys_reg);
-    unsigned prc = intPrecision(val);
+    unsigned prc = signedIntPrecision(val);
 
     DPRINTF(Precision, "RegFile read precision (bits): %i\n", prc);
     intPrecisionRegfileReads.sample(prc);
 
     return val;
-    /// MPINHO 13-sep-2018 #DB9FB659# END ///
+    /// MPINHO 20-oct-2018 #DB9FB659# END ///
 }
 
 template <class Impl>
@@ -1364,12 +1364,12 @@ FullO3CPU<Impl>::setIntReg(PhysRegIdPtr phys_reg, uint64_t val)
 {
     intRegfileWrites++;
 
-    /// MPINHO 13-sep-2018 #6B3D392D# BEGIN ///
-    unsigned prc = intPrecision(val);
+    /// MPINHO 20-oct-2018 #6B3D392D# BEGIN ///
+    unsigned prc = signedIntPrecision(val);
 
     DPRINTF(Precision, "RegFile write precision (bits):%i\n", prc);
     intPrecisionRegfileWrites.sample(prc);
-    /// MPINHO 13-sep-2018 #6B3D392D# END ///
+    /// MPINHO 20-oct-2018 #6B3D392D# END ///
 
     regFile.setIntReg(phys_reg, val);
 }
@@ -1422,15 +1422,15 @@ FullO3CPU<Impl>::readArchIntReg(int reg_idx, ThreadID tid)
     PhysRegIdPtr phys_reg = commitRenameMap[tid].lookup(
             RegId(IntRegClass, reg_idx));
 
-    /// MPINHO 14-sep-2018 #DB9FB659# BEGIN ///
+    /// MPINHO 20-oct-2018 #DB9FB659# BEGIN ///
     uint64_t val = regFile.readIntReg(phys_reg);
-    unsigned prc = intPrecision(val);
+    unsigned prc = signedIntPrecision(val);
 
     DPRINTF(Precision, "RegFile read precision (bits): %i\n", prc);
     intPrecisionRegfileReads.sample(prc);
 
     return val;
-    /// MPINHO 14-sep-2018 #DB9FB659# END ///
+    /// MPINHO 20-oct-2018 #DB9FB659# END ///
 }
 
 template <class Impl>
@@ -1503,7 +1503,7 @@ FullO3CPU<Impl>::setArchIntReg(int reg_idx, uint64_t val, ThreadID tid)
     intRegfileWrites++;
 
     /// MPINHO 14-sep-2018 #6B3D392D# BEGIN ///
-    unsigned prc = intPrecision(val);
+    unsigned prc = signedIntPrecision(val);
 
     DPRINTF(Precision, "RegFile write precision (bits):%i\n", prc);
     intPrecisionRegfileWrites.sample(prc);
