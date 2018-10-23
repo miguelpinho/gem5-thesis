@@ -51,6 +51,7 @@ if 'O3CPU' in env['CPU_MODELS']:
     Source('lsq.cc')
     Source('lsq_unit.cc')
     Source('mem_dep_unit.cc')
+    Source('precision_board.cc')
     Source('regfile.cc')
     Source('rename.cc')
     Source('rename_map.cc')
@@ -73,6 +74,7 @@ if 'O3CPU' in env['CPU_MODELS']:
     DebugFlag('Writeback')
     ### MPINHO 13-sep-2018 #D3922AD7# BEGIN ###
     DebugFlag('Precision')
+    DebugFlag('PrecBoard')
     ### MPINHO 13-sep-2018 #D3922AD7# END ###
 
     CompoundFlag('O3CPUAll', [ 'Fetch', 'Decode', 'Rename', 'IEW', 'Commit',

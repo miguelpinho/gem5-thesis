@@ -2,7 +2,7 @@
 
 #include "base/precision.hh"
 
-unsigned
+uint8_t
 unsignedIntPrecision(uint64_t val)
 {
     if (val == 0) return 0;
@@ -20,7 +20,7 @@ unsignedIntPrecision(uint64_t val)
     return prc;
 }
 
-unsigned
+uint8_t
 signedIntPrecision(uint64_t val)
 {
     uint64_t aux = val;
@@ -45,16 +45,16 @@ signedIntPrecision(uint64_t val)
     return prc;
 }
 
-unsigned
-blockSIntPrecision(uint64_t val, unsigned block)
+uint8_t
+blockSIntPrecision(uint64_t val, uint8_t block)
 {
     unsigned prc = signedIntPrecision(val);
 
     return (prc + block - 1) / block;
 }
 
-unsigned
-logSIntPrecision(uint64_t val, unsigned block)
+uint8_t
+logSIntPrecision(uint64_t val, uint8_t block)
 {
     unsigned aux = blockSIntPrecision(val, block);
 

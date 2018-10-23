@@ -164,6 +164,9 @@ FullO3CPU<Impl>::FullO3CPU(DerivO3CPUParams *params)
               params->numPhysCCRegs,
               vecMode),
 
+      intPrecBoard(name() + ".intPrecBoard",
+              regFile.numIntPhysRegs()),
+
       freeList(name() + ".freelist", &regFile),
 
       rob(this, params),
@@ -1299,7 +1302,9 @@ FullO3CPU<Impl>::readIntReg(PhysRegIdPtr phys_reg)
 
     /// MPINHO 20-oct-2018 #DB9FB659# BEGIN ///
     uint64_t val = regFile.readIntReg(phys_reg);
-    unsigned prc = signedIntPrecision(val);
+
+    unsigned prc = (unsigned) intPrecBoard.getPrecReg(phys_reg);
+    assert(prc == (unsigned) blockSIntPrecision(val, 8));
 
     DPRINTF(Precision, "RegFile read precision (bits): %i\n", prc);
     intPrecisionRegfileReads.sample(prc);
@@ -1364,14 +1369,16 @@ FullO3CPU<Impl>::setIntReg(PhysRegIdPtr phys_reg, uint64_t val)
 {
     intRegfileWrites++;
 
+    regFile.setIntReg(phys_reg, val);
+    intPrecBoard.setPrecReg(phys_reg, val);
+
     /// MPINHO 20-oct-2018 #6B3D392D# BEGIN ///
-    unsigned prc = signedIntPrecision(val);
+    unsigned prc = (unsigned) blockSIntPrecision(val, 8);
 
     DPRINTF(Precision, "RegFile write precision (bits):%i\n", prc);
     intPrecisionRegfileWrites.sample(prc);
     /// MPINHO 20-oct-2018 #6B3D392D# END ///
 
-    regFile.setIntReg(phys_reg, val);
 }
 
 template <class Impl>
@@ -1424,9 +1431,11 @@ FullO3CPU<Impl>::readArchIntReg(int reg_idx, ThreadID tid)
 
     /// MPINHO 20-oct-2018 #DB9FB659# BEGIN ///
     uint64_t val = regFile.readIntReg(phys_reg);
-    unsigned prc = signedIntPrecision(val);
 
-    DPRINTF(Precision, "RegFile read precision (bits): %i\n", prc);
+    unsigned prc = (unsigned) intPrecBoard.getPrecReg(phys_reg);
+    assert(prc == (unsigned) blockSIntPrecision(val, 8));
+
+    DPRINTF(Precision, "RegFile read precision (bits): %i", prc);
     intPrecisionRegfileReads.sample(prc);
 
     return val;
@@ -1502,17 +1511,18 @@ FullO3CPU<Impl>::setArchIntReg(int reg_idx, uint64_t val, ThreadID tid)
 {
     intRegfileWrites++;
 
-    /// MPINHO 14-sep-2018 #6B3D392D# BEGIN ///
-    unsigned prc = signedIntPrecision(val);
-
-    DPRINTF(Precision, "RegFile write precision (bits):%i\n", prc);
-    intPrecisionRegfileWrites.sample(prc);
-    /// MPINHO 14-sep-2018 #6B3D392D# END ///
-
     PhysRegIdPtr phys_reg = commitRenameMap[tid].lookup(
             RegId(IntRegClass, reg_idx));
 
     regFile.setIntReg(phys_reg, val);
+    intPrecBoard.setPrecReg(phys_reg, val);
+
+    /// MPINHO 14-sep-2018 #6B3D392D# BEGIN ///
+    unsigned prc = (unsigned) blockSIntPrecision(val, 8);
+
+    DPRINTF(Precision, "RegFile write precision (bits):%i\n", prc);
+    intPrecisionRegfileWrites.sample(prc);
+    /// MPINHO 14-sep-2018 #6B3D392D# END ///
 }
 
 template <class Impl>

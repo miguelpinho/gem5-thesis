@@ -13,7 +13,7 @@
  *
  * @return precision in bits (0 to 64 unsigned)
  */
-unsigned unsignedIntPrecision(uint64_t val);
+uint8_t unsignedIntPrecision(uint64_t val);
 
 /**
  * Returns the signed precision, in bits, of an integer value.
@@ -24,7 +24,7 @@ unsigned unsignedIntPrecision(uint64_t val);
  *
  * @return precision in bits (1 to 64, unsigned)
  */
-unsigned signedIntPrecision(uint64_t val);
+uint8_t signedIntPrecision(uint64_t val);
 
 /**
  * Returns the bit blocks needed to represent an integer value.
@@ -37,7 +37,7 @@ unsigned signedIntPrecision(uint64_t val);
  *
  * @return count of needed blocks
  */
-unsigned blockSIntPrecision(uint64_t val, unsigned block);
+uint8_t blockSIntPrecision(uint64_t val, uint8_t block);
 
 /**
  * Returns the base 2 log of the blocks needed for an integer value.
@@ -50,7 +50,7 @@ unsigned blockSIntPrecision(uint64_t val, unsigned block);
  *
  * @return smallest power of two of blocks needed
  */
-unsigned logSIntPrecision(uint64_t val, unsigned block);
+uint8_t logSIntPrecision(uint64_t val, uint8_t block);
 
 #endif // __BASE_PRECISION_HH__
 /// MIGUELP 10-oct-2018 #DAB3E238# END ///

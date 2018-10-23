@@ -59,6 +59,7 @@
 #include "config/the_isa.hh"
 #include "cpu/o3/comm.hh"
 #include "cpu/o3/cpu_policy.hh"
+#include "cpu/o3/precision_board.hh"
 #include "cpu/o3/scoreboard.hh"
 #include "cpu/o3/thread_state.hh"
 #include "cpu/activity.hh"
@@ -610,6 +611,9 @@ class FullO3CPU : public BaseO3CPU
 
     /** The register file. */
     PhysRegFile regFile;
+
+    /** Integer register precision board */
+    PrecisionBoard intPrecBoard;
 
     /** The free list. */
     typename CPUPolicy::FreeList freeList;
