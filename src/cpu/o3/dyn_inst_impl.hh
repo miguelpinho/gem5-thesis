@@ -44,9 +44,15 @@
 #define __CPU_O3_DYN_INST_IMPL_HH__
 
 #include "base/cp_annotate.hh"
+
+/// MPINHO ///
+#include "base/trace.hh"
+#include "cpu/o3/comm.hh"
+
+/// MPINHO ///
 #include "cpu/o3/dyn_inst.hh"
-#include "sim/full_system.hh"
 #include "debug/O3PipeView.hh"
+#include "sim/full_system.hh"
 
 template <class Impl>
 BaseO3DynInst<Impl>::BaseO3DynInst(const StaticInstPtr &staticInst,
@@ -247,4 +253,31 @@ BaseO3DynInst<Impl>::syscall(int64_t callnum, Fault *fault)
     }
 }
 
+/// MPINHO ///
+template <class Impl>
+unsigned
+BaseO3DynInst<Impl>::getIntOpPrecision()
+{
+    if (this->opClass() == IntAluOp) {
+        unsigned opPrec = 1;
+
+        for (int idx = 0; idx < this->numSrcRegs(); idx++) {
+            if (this->_srcRegIdx[idx]->classValue() != IntRegClass)
+                return 8;
+
+            unsigned prc = this->cpu->readPrecIntReg(this->_srcRegIdx[idx]);
+
+            if (prc > opPrec)
+                opPrec = prc;
+        }
+
+        return opPrec;
+    } else if (!this->isInteger()) {
+
+        panic("Tried to evaluate the precision of a non-integer operation\n");
+    }
+
+    return 8;
+}
+/// MPINHO ///
 #endif//__CPU_O3_DYN_INST_IMPL_HH__

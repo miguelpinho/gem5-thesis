@@ -1578,6 +1578,16 @@ FullO3CPU<Impl>::setArchCCReg(int reg_idx, CCReg val, ThreadID tid)
     regFile.setCCReg(phys_reg, val);
 }
 
+/// MPINHO ///
+template <class Impl>
+unsigned
+FullO3CPU<Impl>::readPrecIntReg(PhysRegIdPtr phys_reg)
+{
+
+    return (unsigned) intPrecBoard.getPrecReg(phys_reg);
+}
+/// MPINHO ///
+
 template <class Impl>
 TheISA::PCState
 FullO3CPU<Impl>::pcState(ThreadID tid)

@@ -40,10 +40,11 @@ class PrecisionBoard
 
     PrecVal getPrecReg(PhysRegIdPtr phys_reg) const
     {
-        assert(phys_reg->flatIndex() < numPhysRegs);
-
         DPRINTF(PrecBoard, "Getting precision of reg %i (%s)\n",
                 phys_reg->index(), phys_reg->className());
+
+        assert(phys_reg->classValue() == IntRegClass);
+        assert(phys_reg->flatIndex() < numPhysRegs);
 
         // zero reg has fixed precision
         if (phys_reg->isZeroReg()) {

@@ -255,6 +255,11 @@ class BaseO3DynInst : public BaseDynInst<Impl>
     /** Emulates a syscall. */
     void syscall(int64_t callnum, Fault *fault);
 
+    /// MPINHO ///
+    /** Calcultates the precision of an integer operation */
+    unsigned getIntOpPrecision();
+    /// MPINHO ///
+
   public:
 
     // The register accessor methods provide the index of the

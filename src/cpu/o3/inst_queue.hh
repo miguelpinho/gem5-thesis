@@ -537,6 +537,13 @@ class InstructionQueue
     Stats::Vector fuBusy;
     /** Number of times the FU was busy per instruction issued. */
     Stats::Formula fuBusyRate;
+
+    /// MPINHO ///
+    /** Number of possible merges per clock cycle. */
+    Stats::Histogram intAluReady;
+    Stats::Histogram intAluFuses;
+    /// MPINHO ///
+
    public:
     Stats::Scalar intInstQueueReads;
     Stats::Scalar intInstQueueWrites;

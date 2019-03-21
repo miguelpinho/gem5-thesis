@@ -514,6 +514,9 @@ class FullO3CPU : public BaseO3CPU
 
     void setArchCCReg(int reg_idx, TheISA::CCReg val, ThreadID tid);
 
+    /** Reads the precision of an integer register. */
+    unsigned readPrecIntReg(PhysRegIdPtr phys_reg);
+
     /** Sets the commit PC state of a specific thread. */
     void pcState(const TheISA::PCState &newPCState, ThreadID tid);
 
