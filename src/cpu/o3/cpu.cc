@@ -522,43 +522,35 @@ FullO3CPU<Impl>::regStats()
 
     intRegfileReads
         .name(name() + ".int_regfile_reads")
-        .desc("number of integer regfile reads")
-        .prereq(intRegfileReads);
+        .desc("number of integer regfile reads");
 
     intRegfileWrites
         .name(name() + ".int_regfile_writes")
-        .desc("number of integer regfile writes")
-        .prereq(intRegfileWrites);
+        .desc("number of integer regfile writes");
 
     fpRegfileReads
         .name(name() + ".fp_regfile_reads")
-        .desc("number of floating regfile reads")
-        .prereq(fpRegfileReads);
+        .desc("number of floating regfile reads");
 
     fpRegfileWrites
         .name(name() + ".fp_regfile_writes")
-        .desc("number of floating regfile writes")
-        .prereq(fpRegfileWrites);
+        .desc("number of floating regfile writes");
 
     vecRegfileReads
         .name(name() + ".vec_regfile_reads")
-        .desc("number of vector regfile reads")
-        .prereq(vecRegfileReads);
+        .desc("number of vector regfile reads");
 
     vecRegfileWrites
         .name(name() + ".vec_regfile_writes")
-        .desc("number of vector regfile writes")
-        .prereq(vecRegfileWrites);
+        .desc("number of vector regfile writes");
 
     vecPredRegfileReads
         .name(name() + ".pred_regfile_reads")
-        .desc("number of predicate regfile reads")
-        .prereq(vecPredRegfileReads);
+        .desc("number of predicate regfile reads");
 
     vecPredRegfileWrites
         .name(name() + ".pred_regfile_writes")
-        .desc("number of predicate regfile writes")
-        .prereq(vecPredRegfileWrites);
+        .desc("number of predicate regfile writes");
 
     /// MPINHO 27-mar-2019 BEGIN ///
     vecRegFileUsage.name(name() + ".vec_reg_file_usage")
@@ -573,23 +565,19 @@ FullO3CPU<Impl>::regStats()
 
     ccRegfileReads
         .name(name() + ".cc_regfile_reads")
-        .desc("number of cc regfile reads")
-        .prereq(ccRegfileReads);
+        .desc("number of cc regfile reads");
 
     ccRegfileWrites
         .name(name() + ".cc_regfile_writes")
-        .desc("number of cc regfile writes")
-        .prereq(ccRegfileWrites);
+        .desc("number of cc regfile writes");
 
     miscRegfileReads
         .name(name() + ".misc_regfile_reads")
-        .desc("number of misc regfile reads")
-        .prereq(miscRegfileReads);
+        .desc("number of misc regfile reads");
 
     miscRegfileWrites
         .name(name() + ".misc_regfile_writes")
-        .desc("number of misc regfile writes")
-        .prereq(miscRegfileWrites);
+        .desc("number of misc regfile writes");
 }
 
 template <class Impl>

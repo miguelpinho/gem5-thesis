@@ -104,72 +104,56 @@ DefaultRename<Impl>::regStats()
 {
     renameSquashCycles
         .name(name() + ".SquashCycles")
-        .desc("Number of cycles rename is squashing")
-        .prereq(renameSquashCycles);
+        .desc("Number of cycles rename is squashing");
     renameIdleCycles
         .name(name() + ".IdleCycles")
-        .desc("Number of cycles rename is idle")
-        .prereq(renameIdleCycles);
+        .desc("Number of cycles rename is idle");
     renameBlockCycles
         .name(name() + ".BlockCycles")
-        .desc("Number of cycles rename is blocking")
-        .prereq(renameBlockCycles);
+        .desc("Number of cycles rename is blocking");
     renameSerializeStallCycles
         .name(name() + ".serializeStallCycles")
         .desc("count of cycles rename stalled for serializing inst")
         .flags(Stats::total);
     renameRunCycles
         .name(name() + ".RunCycles")
-        .desc("Number of cycles rename is running")
-        .prereq(renameIdleCycles);
+        .desc("Number of cycles rename is running");
     renameUnblockCycles
         .name(name() + ".UnblockCycles")
-        .desc("Number of cycles rename is unblocking")
-        .prereq(renameUnblockCycles);
+        .desc("Number of cycles rename is unblocking");
     renameRenamedInsts
         .name(name() + ".RenamedInsts")
-        .desc("Number of instructions processed by rename")
-        .prereq(renameRenamedInsts);
+        .desc("Number of instructions processed by rename");
     renameSquashedInsts
         .name(name() + ".SquashedInsts")
-        .desc("Number of squashed instructions processed by rename")
-        .prereq(renameSquashedInsts);
+        .desc("Number of squashed instructions processed by rename");
     renameROBFullEvents
         .name(name() + ".ROBFullEvents")
-        .desc("Number of times rename has blocked due to ROB full")
-        .prereq(renameROBFullEvents);
+        .desc("Number of times rename has blocked due to ROB full");
     renameIQFullEvents
         .name(name() + ".IQFullEvents")
-        .desc("Number of times rename has blocked due to IQ full")
-        .prereq(renameIQFullEvents);
+        .desc("Number of times rename has blocked due to IQ full");
     renameLQFullEvents
         .name(name() + ".LQFullEvents")
-        .desc("Number of times rename has blocked due to LQ full")
-        .prereq(renameLQFullEvents);
+        .desc("Number of times rename has blocked due to LQ full");
     renameSQFullEvents
         .name(name() + ".SQFullEvents")
-        .desc("Number of times rename has blocked due to SQ full")
-        .prereq(renameSQFullEvents);
+        .desc("Number of times rename has blocked due to SQ full");
     renameFullRegistersEvents
         .name(name() + ".FullRegisterEvents")
-        .desc("Number of times there has been no free registers")
-        .prereq(renameFullRegistersEvents);
+        .desc("Number of times there has been no free registers");
     renameRenamedOperands
         .name(name() + ".RenamedOperands")
-        .desc("Number of destination operands rename has renamed")
-        .prereq(renameRenamedOperands);
+        .desc("Number of destination operands rename has renamed");
     renameRenameLookups
         .name(name() + ".RenameLookups")
-        .desc("Number of register rename lookups that rename has made")
-        .prereq(renameRenameLookups);
+        .desc("Number of register rename lookups that rename has made");
     renameCommittedMaps
         .name(name() + ".CommittedMaps")
-        .desc("Number of HB maps that are committed")
-        .prereq(renameCommittedMaps);
+        .desc("Number of HB maps that are committed");
     renameUndoneMaps
         .name(name() + ".UndoneMaps")
-        .desc("Number of HB maps that are undone due to squashing")
-        .prereq(renameUndoneMaps);
+        .desc("Number of HB maps that are undone due to squashing");
     renamedSerializing
         .name(name() + ".serializingInsts")
         .desc("count of serializing insts renamed")
@@ -187,20 +171,16 @@ DefaultRename<Impl>::regStats()
         ;
     intRenameLookups
         .name(name() + ".int_rename_lookups")
-        .desc("Number of integer rename lookups")
-        .prereq(intRenameLookups);
+        .desc("Number of integer rename lookups");
     fpRenameLookups
         .name(name() + ".fp_rename_lookups")
-        .desc("Number of floating rename lookups")
-        .prereq(fpRenameLookups);
+        .desc("Number of floating rename lookups");
     vecRenameLookups
         .name(name() + ".vec_rename_lookups")
-        .desc("Number of vector rename lookups")
-        .prereq(vecRenameLookups);
+        .desc("Number of vector rename lookups");
     vecPredRenameLookups
         .name(name() + ".vec_pred_rename_lookups")
-        .desc("Number of vector predicate rename lookups")
-        .prereq(vecPredRenameLookups);
+        .desc("Number of vector predicate rename lookups");
 }
 
 template <class Impl>
