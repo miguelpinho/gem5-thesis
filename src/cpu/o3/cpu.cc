@@ -1334,6 +1334,23 @@ FullO3CPU<Impl>::readVecReg(PhysRegIdPtr phys_reg) const
     return regFile.readVecReg(phys_reg);
 }
 
+/// MPINHO 07-dec-2019 BEGIN ///
+template <class Impl>
+RegVal
+FullO3CPU<Impl>::peekIntReg(PhysRegIdPtr phys_reg)
+{
+    return regFile.readIntReg(phys_reg);
+}
+
+template <class Impl>
+auto
+FullO3CPU<Impl>::peekVecReg(PhysRegIdPtr phys_reg) const
+        -> const VecRegContainer&
+{
+    return regFile.readVecReg(phys_reg);
+}
+/// MPINHO 07-dec-2019 END ///
+
 template <class Impl>
 auto
 FullO3CPU<Impl>::getWritableVecReg(PhysRegIdPtr phys_reg)
