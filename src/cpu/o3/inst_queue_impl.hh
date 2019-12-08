@@ -192,65 +192,98 @@ InstructionQueue<Impl>::regStats()
     using namespace Stats;
     iqInstsAdded
         .name(name() + ".iqInstsAdded")
-        .desc("Number of instructions added to the IQ (excludes non-spec)")
-        .prereq(iqInstsAdded);
+        .desc("Number of instructions added to the IQ (excludes non-spec)");
 
     iqNonSpecInstsAdded
         .name(name() + ".iqNonSpecInstsAdded")
-        .desc("Number of non-speculative instructions added to the IQ")
-        .prereq(iqNonSpecInstsAdded);
+        .desc("Number of non-speculative instructions added to the IQ");
+
+    iqIntInstsAdded
+        .name(name() + ".iqIntInstsAdded")
+        .desc("Number of integer instructions added to IQ");
+
+    iqFloatInstsAdded
+        .name(name() + ".iqFloatInstsAdded")
+        .desc("Number of float instructions added to IQ");
+
+    iqVecInstsAdded
+        .name(name() + ".iqVecInstsAdded")
+        .desc("Number of vector instructions added to IQ");
+
+    iqBranchInstsAdded
+        .name(name() + ".iqBranchInstsAdded")
+        .desc("Number of branch instructions added to IQ");
+
+    iqMemInstsAdded
+        .name(name() + ".iqMemInstsAdded")
+        .desc("Number of memory instructions added to IQ");
+
+    iqLoadInstsAdded
+        .name(name() + ".iqLoadInstsAdded")
+        .desc("Number of load instructions added to IQ");
+
+    iqStoreInstsAdded
+        .name(name() + ".iqStoreInstsAdded")
+        .desc("Number of store instructions added to IQ");
+
+    iqMiscInstsAdded
+        .name(name() + ".iqMiscInstsAdded")
+        .desc("Number of miscellaneous instructions added to IQ");
+
 
     iqInstsIssued
         .name(name() + ".iqInstsIssued")
-        .desc("Number of instructions issued")
-        .prereq(iqInstsIssued);
+        .desc("Number of instructions issued");
 
     iqIntInstsIssued
         .name(name() + ".iqIntInstsIssued")
-        .desc("Number of integer instructions issued")
-        .prereq(iqIntInstsIssued);
+        .desc("Number of integer instructions issued");
 
     iqFloatInstsIssued
         .name(name() + ".iqFloatInstsIssued")
-        .desc("Number of float instructions issued")
-        .prereq(iqFloatInstsIssued);
+        .desc("Number of float instructions issued");
+
+    iqVecInstsIssued
+        .name(name() + ".iqVecInstsIssued")
+        .desc("Number of vector instructions issued");
 
     iqBranchInstsIssued
         .name(name() + ".iqBranchInstsIssued")
-        .desc("Number of branch instructions issued")
-        .prereq(iqBranchInstsIssued);
+        .desc("Number of branch instructions issued");
 
     iqMemInstsIssued
         .name(name() + ".iqMemInstsIssued")
-        .desc("Number of memory instructions issued")
-        .prereq(iqMemInstsIssued);
+        .desc("Number of memory instructions issued");
+
+    iqLoadInstsIssued
+        .name(name() + ".iqLoadInstsIssued")
+        .desc("Number of load instructions issued");
+
+    iqStoreInstsIssued
+        .name(name() + ".iStoreInstsIssued")
+        .desc("Number of store instructions issued");
 
     iqMiscInstsIssued
         .name(name() + ".iqMiscInstsIssued")
-        .desc("Number of miscellaneous instructions issued")
-        .prereq(iqMiscInstsIssued);
+        .desc("Number of miscellaneous instructions issued");
 
     iqSquashedInstsIssued
         .name(name() + ".iqSquashedInstsIssued")
-        .desc("Number of squashed instructions issued")
-        .prereq(iqSquashedInstsIssued);
+        .desc("Number of squashed instructions issued");
 
     iqSquashedInstsExamined
         .name(name() + ".iqSquashedInstsExamined")
         .desc("Number of squashed instructions iterated over during squash;"
-              " mainly for profiling")
-        .prereq(iqSquashedInstsExamined);
+              " mainly for profiling");
 
     iqSquashedOperandsExamined
         .name(name() + ".iqSquashedOperandsExamined")
         .desc("Number of squashed operands that are examined and possibly "
-              "removed from graph")
-        .prereq(iqSquashedOperandsExamined);
+              "removed from graph");
 
     iqSquashedNonSpecRemoved
         .name(name() + ".iqSquashedNonSpecRemoved")
-        .desc("Number of squashed non-spec instructions that were removed")
-        .prereq(iqSquashedNonSpecRemoved);
+        .desc("Number of squashed non-spec instructions that were removed");
 /*
     queueResDist
         .init(Num_OpClasses, 0, 99, 2)
@@ -334,6 +367,13 @@ InstructionQueue<Impl>::regStats()
         .flags(total)
         ;
     fuBusyRate = fuBusy / iqInstsIssued;
+
+    /// MPINHO 07-dec-2019 BEGIN ///
+    iqVecInstsFused
+        .name(name() + ".iqVecInstsFused")
+        .desc("Number of vector instructions that were fused");
+
+    /// MPINHO 07-dec-2019 END ///
 
     /// MPINHO 30-jul-2019 BEGIN ///
     statIssuedWidthClass
@@ -745,6 +785,25 @@ InstructionQueue<Impl>::insert(const DynInstPtr &new_inst)
     }
 
     ++iqInstsAdded;
+    /// MPINHO 07-dec-2019 BEGIN ///
+    if (new_inst->isControl()) {
+        iqBranchInstsAdded++;
+    } else if (new_inst->isLoad()) {
+        iqLoadInstsAdded++;
+        iqMemInstsAdded++;
+    } else if (new_inst->isStore() || new_inst->isStoreConditional()) {
+        iqStoreInstsAdded++;
+        iqMemInstsAdded++;
+    } else if (new_inst->isFloating()) {
+        iqFloatInstsAdded++;
+    } else if (new_inst->isVector()) {
+        iqVecInstsAdded++;
+    } else if (new_inst->isInteger() || new_inst->isNop()) {
+        iqIntInstsAdded++;
+    } else {
+        iqMiscInstsAdded++;
+    }
+    /// MPINHO 07-dec-2019 END ///
 
     count[new_inst->threadNumber]++;
 
@@ -792,6 +851,25 @@ InstructionQueue<Impl>::insertNonSpec(const DynInstPtr &new_inst)
     }
 
     ++iqNonSpecInstsAdded;
+    /// MPINHO 07-dec-2019 BEGIN ///
+    if (new_inst->isControl()) {
+        iqBranchInstsAdded++;
+    } else if (new_inst->isLoad()) {
+        iqLoadInstsAdded++;
+        iqMemInstsAdded++;
+    } else if (new_inst->isStore() || new_inst->isStoreConditional()) {
+        iqStoreInstsAdded++;
+        iqMemInstsAdded++;
+    } else if (new_inst->isFloating()) {
+        iqFloatInstsAdded++;
+    } else if (new_inst->isVector()) {
+        iqVecInstsAdded++;
+    } else if (new_inst->isInteger() || new_inst->isNop()) {
+        iqIntInstsAdded++;
+    } else {
+        iqMiscInstsAdded++;
+    }
+    /// MPINHO 07-dec-2019 END ///
 
     count[new_inst->threadNumber]++;
 
@@ -1073,6 +1151,28 @@ InstructionQueue<Impl>::scheduleReadyInsts()
 
             order_it = listOrder.erase(order_it);
             statIssuedInstType[tid][op_class]++;
+
+            /// MPINHO 07-dec-2019 BEGIN ///
+            if (issuing_inst->isControl()) {
+                iqBranchInstsIssued++;
+            } else if (issuing_inst->isLoad()) {
+                iqLoadInstsIssued++;
+                iqMemInstsIssued++;
+            } else if (issuing_inst->isStore() ||
+                       issuing_inst->isStoreConditional()) {
+                iqStoreInstsIssued++;
+                iqMemInstsIssued++;
+            } else if (issuing_inst->isFloating()) {
+                iqFloatInstsIssued++;
+            } else if (issuing_inst->isVector()) {
+                iqVecInstsIssued++;
+            } else if (issuing_inst->isInteger() || issuing_inst->isNop()) {
+                iqIntInstsIssued++;
+            } else {
+                iqMiscInstsIssued++;
+            }
+            /// MPINHO 07-dec-2019 END ///
+
             /// MPINHO 30-jul-2019 BEGIN ///
             WidthClass width_class = issuing_inst->getWidthClass();
             statIssuedWidthClass[static_cast<int>(width_class)]++;

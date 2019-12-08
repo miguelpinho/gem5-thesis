@@ -291,6 +291,20 @@ class BaseO3DynInst : public BaseDynInst<Impl>
         return this->cpu->readVecReg(this->_srcRegIdx[idx]);
     }
 
+    /// MPINHO 07-dec-2019 BEGIN ///
+    RegVal
+    peekIntRegOperand(const StaticInst *si, int idx)
+    {
+        return this->cpu->peekIntReg(this->_srcRegIdx[idx]);
+    }
+
+    const VecRegContainer&
+    peekVecRegOperand(const StaticInst *si, int idx) const
+    {
+        return this->cpu->peekVecReg(this->_srcRegIdx[idx]);
+    }
+    /// MPINHO 07-dec-2019 BEGIN ///
+
     /**
      * Read destination vector register operand for modification.
      */

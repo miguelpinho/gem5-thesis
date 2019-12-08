@@ -238,7 +238,7 @@ int
 WidthDecoder<Impl>::intSrcRegWidth(const DynInstPtr &inst,
                                    uint8_t op)
 {
-    uint64_t val = inst->readIntRegOperand(inst->staticInst.get(),
+    uint64_t val = inst->peekIntRegOperand(inst->staticInst.get(),
                                            op);
     int rsl = roundedPrcFunc(val);
 
@@ -405,7 +405,7 @@ WidthDecoder<Impl>::getWidthVecReg(const DynInstPtr &inst, int nElem,
     // FIXME: this count as an invalid access to the register, in terms of
     // stats?? Create proxy access function?
     const VecRegT<Elem, Size, true> &vsrc =
-        inst->readVecRegOperand(inst->staticInst.get(), op);
+        inst->peekVecRegOperand(inst->staticInst.get(), op);
 
     for (size_t i = 0; i < nElem; i++)
     {
@@ -436,7 +436,7 @@ WidthDecoder<Impl>::getWidthVecRegIndex(const DynInstPtr &inst,
     // FIXME: this count as an invalid access to the register, in terms of
     // stats?? Create proxy access function?
     const VecRegT<Elem, Size, true> &vsrc =
-        inst->readVecRegOperand(inst->staticInst.get(), op);
+        inst->peekVecRegOperand(inst->staticInst.get(), op);
 
     int rsl = roundedPrcFunc((uint64_t) (int64_t) vsrc[idx]);
 
@@ -465,7 +465,7 @@ WidthDecoder<Impl>::getWidthVecRegBroadcast(const DynInstPtr &inst,
     // FIXME: this count as an invalid access to the register, in terms of
     // stats?? Create proxy access function?
     const VecRegT<Elem, Size, true> &vsrc =
-        inst->readVecRegOperand(inst->staticInst.get(), op);
+        inst->peekVecRegOperand(inst->staticInst.get(), op);
 
     int rsl = roundedPrcFunc((uint64_t) (int64_t) vsrc[idx]);
 
@@ -495,7 +495,7 @@ WidthDecoder<Impl>::getWidthVecRegWiden(const DynInstPtr &inst, int nElem,
     // FIXME: this count as an invalid access to the register, in terms of
     // stats?? Create proxy access function?
     const VecRegT<Elem, Size, true> &vsrc =
-        inst->readVecRegOperand(inst->staticInst.get(), op);
+        inst->peekVecRegOperand(inst->staticInst.get(), op);
 
     for (size_t i = 0; i < nElem; i++)
     {
