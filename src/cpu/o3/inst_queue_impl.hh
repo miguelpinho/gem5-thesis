@@ -372,7 +372,6 @@ InstructionQueue<Impl>::regStats()
     iqVecInstsFused
         .name(name() + ".iqVecInstsFused")
         .desc("Number of vector instructions that were fused");
-
     /// MPINHO 07-dec-2019 END ///
 
     /// MPINHO 30-jul-2019 BEGIN ///
@@ -1359,11 +1358,36 @@ InstructionQueue<Impl>::scheduleReadyInsts()
                             }
 
                             statIssuedInstType[tid][fuse_op_class]++;
+
+                            /// MPINHO 07-dec-2019 BEGIN ///
+                            if (fuse_candidate_inst->isControl()) {
+                                iqBranchInstsIssued++;
+                            } else if (fuse_candidate_inst->isLoad()) {
+                                iqLoadInstsIssued++;
+                                iqMemInstsIssued++;
+                            } else if (fuse_candidate_inst->isStore() ||
+                                fuse_candidate_inst->isStoreConditional()) {
+                                iqStoreInstsIssued++;
+                                iqMemInstsIssued++;
+                            } else if (fuse_candidate_inst->isFloating()) {
+                                iqFloatInstsIssued++;
+                            } else if (fuse_candidate_inst->isVector()) {
+                                iqVecInstsIssued++;
+                            } else if (fuse_candidate_inst->isInteger() ||
+                                       fuse_candidate_inst->isNop()) {
+                                iqIntInstsIssued++;
+                            } else {
+                                iqMiscInstsIssued++;
+                            }
+                            /// MPINHO 07-dec-2019 END ///
+
                             statIssuedWidthClass[
                                 static_cast<int>(fuse_width_class)]++;
-                            if (fuse_candidate_inst->isVector())
+                            if (fuse_candidate_inst->isVector()) {
+                                ++iqVecInstsFused;
                                 statIssuedVecElemSize[
                                     static_cast<int>(fuse_width_class)]++;
+                            }
 
                             // FIXME: Only one fuse inst can be issued per
                             // opportunity.
