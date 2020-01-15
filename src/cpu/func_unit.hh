@@ -131,6 +131,7 @@ class FuncUnit
     void resetIssueCap();
     unsigned getWidthCap();
     unsigned getUsedWidthCap();
+    unsigned getTotalWidth();
     void useWidthCap(unsigned width);
     void resetWidthCap();
     /// MPINHO 22-aug-2019 END ///

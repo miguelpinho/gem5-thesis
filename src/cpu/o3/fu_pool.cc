@@ -241,6 +241,16 @@ FUPool::regStats()
         .desc("dist of the number of FP+Simd FUs used")
         ;
 
+    totalSimdFUUsed
+        .name(name() + ".totalSimdFUUsed")
+        .desc("Counts the total number of cycles the SIMD functional "
+              "units are used")
+        ;
+    totalSimdWidthUsed
+        .name(name() + ".totalSimdWidthUsed")
+        .desc("Counts the total SIMD functional units' width used")
+        ;
+
     totalSimdIdle
         .init(numSimdFU)
         .name(name() + ".totalSimdIdle")
@@ -413,6 +423,9 @@ FUPool::updateStats()
             }
         }
     }
+
+    totalSimdFUUsed += usedSimd;
+    totalSimdWidthUsed += totalWidthSimd;
 
     statSimdFUUsed.sample(usedSimd);
     statSimdFUIssued.sample(issuedSimd);

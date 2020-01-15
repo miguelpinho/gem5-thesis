@@ -186,6 +186,11 @@ unsigned FuncUnit::getUsedWidthCap()
     return widthCap - availWidthCap;
 }
 
+unsigned FuncUnit::getTotalWidth()
+{
+    return widthCap;
+}
+
 void FuncUnit::useWidthCap(unsigned width)
 {
     assert(width <= availWidthCap);
