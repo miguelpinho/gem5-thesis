@@ -151,6 +151,9 @@ class FUPool : public SimObject
     Stats::Distribution statFPFUUsed;
     Stats::Distribution statFPSimdFUUsed;
 
+    Stats::Scalar totalSimdFUUsed;
+    Stats::Scalar totalSimdWidthUsed;
+
     Stats::Vector totalSimdIdle;
     /// MPINHO 23-aug-2019 END ///
 

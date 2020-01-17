@@ -432,6 +432,11 @@ class FullO3CPU : public BaseO3CPU
 
     const VecRegContainer& readVecReg(PhysRegIdPtr reg_idx) const;
 
+    /// MPINHO 07-dec-2019 BEGIN ///
+    RegVal peekIntReg(PhysRegIdPtr phys_reg);
+    const VecRegContainer& peekVecReg(PhysRegIdPtr reg_idx) const;
+    /// MPINHO 07-dec-2019 END ///
+
     /**
      * Read physical vector register for modification.
      */
