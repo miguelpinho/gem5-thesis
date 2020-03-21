@@ -489,16 +489,39 @@ class InstructionQueue
     Stats::Scalar iqInstsAdded;
     /** Stat for number of non-speculative instructions added. */
     Stats::Scalar iqNonSpecInstsAdded;
+    /** Stat for number of integer instructions added. */
+    Stats::Scalar iqIntInstsAdded;
+    /** Stat for number of floating point instructions added. */
+    Stats::Scalar iqFloatInstsAdded;
+    /** Stat for number of vector instructions added. */
+    Stats::Scalar iqVecInstsAdded;
+    /** Stat for number of branch instructions added. */
+    Stats::Scalar iqBranchInstsAdded;
+    /** Stat for number of memory instructions added. */
+    Stats::Scalar iqMemInstsAdded;
+    /** Stat for number of load instructions added. */
+    Stats::Scalar iqLoadInstsAdded;
+    /** Stat for number of store instructions added. */
+    Stats::Scalar iqStoreInstsAdded;
+    /** Stat for number of miscellaneous instructions added. */
+    Stats::Scalar iqMiscInstsAdded;
+    /** Stat for number of squashed instructions that were ready to added. */
 
     Stats::Scalar iqInstsIssued;
     /** Stat for number of integer instructions issued. */
     Stats::Scalar iqIntInstsIssued;
     /** Stat for number of floating point instructions issued. */
     Stats::Scalar iqFloatInstsIssued;
+    /** Stat for number of vector instructions issued. */
+    Stats::Scalar iqVecInstsIssued;
     /** Stat for number of branch instructions issued. */
     Stats::Scalar iqBranchInstsIssued;
     /** Stat for number of memory instructions issued. */
     Stats::Scalar iqMemInstsIssued;
+    /** Stat for number of memory instructions issued. */
+    Stats::Scalar iqLoadInstsIssued;
+    /** Stat for number of memory instructions issued. */
+    Stats::Scalar iqStoreInstsIssued;
     /** Stat for number of miscellaneous instructions issued. */
     Stats::Scalar iqMiscInstsIssued;
     /** Stat for number of squashed instructions that were ready to issue. */
@@ -540,6 +563,10 @@ class InstructionQueue
     Stats::Vector fuBusy;
     /** Number of times the FU was busy per instruction issued. */
     Stats::Formula fuBusyRate;
+
+    /// MPINHO 07-dec-2019 BEGIN ///
+    Stats::Scalar iqVecInstsFused;
+    /// MPINHO 07-dec-2019 END ///
 
     /// MPINHO 30-jul-2019 BEGIN ///
     /** Number of instructions issued by width class. */
