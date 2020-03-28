@@ -24,70 +24,67 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# Authors: ICS-FORTH, Polydoros Petrakis <ppetrak@ics.forth.gr>
+# Authors: Ron Dreslinski
 
 
 from m5.objects import *
 
-# Based on previous model for ARM Cortex A72 provided by Adria Armejach (BSC)
-# and information from the following links regarding Cortex-A76:
-# https://en.wikichip.org/wiki/arm_holdings/microarchitectures/cortex-a76
-# https://www.anandtech.com/show/12785/arm-cortex-a76-cpu
-#-unveiled-7nm-powerhouse/2
-# https://www.anandtech.com/show/12785/arm-cortex-a76-cpu
-#-unveiled-7nm-powerhouse/3
+# The high performance core FU Pool is based on Apple's A12 Vortex
+# public information on execution latency and throughput
+# https://www.anandtech.com/show/13392/the-iphone-xs-xs-max-review
+#-unveiling-the-silicon-secrets/3
 
 # Simple ALU Instructions have a latency of 1
 class O3_ARM_v7a_Simple_Int(FUDesc):
     opList = [ OpDesc(opClass='IntAlu', opLat=1) ]
-    count = 3
+    count = 6
 
 # Complex ALU instructions have a variable latencies
 class O3_ARM_v7a_Complex_Int(FUDesc):
-    opList = [ OpDesc(opClass='IntMult', opLat=2, pipelined=True),
-               OpDesc(opClass='IntDiv', opLat=12, pipelined=False),
+    opList = [ OpDesc(opClass='IntMult', opLat=4, pipelined=True),
+               OpDesc(opClass='IntDiv', opLat=8, pipelined=False),
                OpDesc(opClass='IprAccess', opLat=3, pipelined=True) ]
-    count = 1
+    count = 2
 
-# Floating point
+# Floating point instructions
 class O3_ARM_v7a_FP(FUDesc):
-    opList = [ OpDesc(opClass='FloatAdd', opLat=2),
-               OpDesc(opClass='FloatCmp', opLat=2),
-               OpDesc(opClass='FloatCvt', opLat=2),
+    opList = [ OpDesc(opClass='FloatAdd', opLat=3),
+               OpDesc(opClass='FloatCmp', opLat=3),
+               OpDesc(opClass='FloatCvt', opLat=3),
                OpDesc(opClass='FloatDiv', opLat=9, pipelined=False),
                OpDesc(opClass='FloatSqrt', opLat=33, pipelined=False),
-               OpDesc(opClass='FloatMult', opLat=3),
+               OpDesc(opClass='FloatMult', opLat=4),
                OpDesc(opClass='FloatMultAcc', opLat=4),
                OpDesc(opClass='FloatMisc', opLat=3) ]
-    count = 2
+    count = 1
     widthCap = 128
     floatp = True
 
 
 # SIMD instructions
 class O3_ARM_v7a_AdvSimd(FUDesc):
-    opList = [ OpDesc(opClass='SimdAdd', opLat=2),
-               OpDesc(opClass='SimdAddAcc', opLat=2),
-               OpDesc(opClass='SimdAlu', opLat=2),
-               OpDesc(opClass='SimdCmp', opLat=2),
-               OpDesc(opClass='SimdCvt', opLat=2),
-               OpDesc(opClass='SimdMisc', opLat=2),
+    opList = [ OpDesc(opClass='SimdAdd', opLat=3),
+               OpDesc(opClass='SimdAddAcc', opLat=3),
+               OpDesc(opClass='SimdAlu', opLat=3),
+               OpDesc(opClass='SimdCmp', opLat=3),
+               OpDesc(opClass='SimdCvt', opLat=3),
+               OpDesc(opClass='SimdMisc', opLat=3),
                OpDesc(opClass='SimdMult',opLat=4),
                OpDesc(opClass='SimdMultAcc',opLat=4),
-               OpDesc(opClass='SimdShift',opLat=2),
-               OpDesc(opClass='SimdShiftAcc', opLat=2),
-               OpDesc(opClass='SimdSqrt', opLat=9),
-               OpDesc(opClass='SimdFloatAdd',opLat=2),
-               OpDesc(opClass='SimdFloatAlu',opLat=2),
-               OpDesc(opClass='SimdFloatCmp', opLat=2),
-               OpDesc(opClass='SimdFloatCvt', opLat=2),
-               OpDesc(opClass='SimdFloatDiv', opLat=3),
-               OpDesc(opClass='SimdFloatMisc', opLat=2),
-               OpDesc(opClass='SimdFloatMult', opLat=3),
+               OpDesc(opClass='SimdShift',opLat=3),
+               OpDesc(opClass='SimdShiftAcc', opLat=3),
+               OpDesc(opClass='SimdSqrt', opLat=10),
+               OpDesc(opClass='SimdFloatAdd',opLat=4),
+               OpDesc(opClass='SimdFloatAlu',opLat=4),
+               OpDesc(opClass='SimdFloatCmp', opLat=4),
+               OpDesc(opClass='SimdFloatCvt', opLat=4),
+               OpDesc(opClass='SimdFloatDiv', opLat=4),
+               OpDesc(opClass='SimdFloatMisc', opLat=4),
+               OpDesc(opClass='SimdFloatMult', opLat=5),
                OpDesc(opClass='SimdFloatMultAcc',opLat=5),
-               OpDesc(opClass='SimdFloatSqrt', opLat=9) ]
-    count = 2
-    fuseCap = 0
+               OpDesc(opClass='SimdFloatSqrt', opLat=10) ]
+    count = 1
+    fuseCap = 3
     widthCap = 128
     simd = True
 
@@ -140,30 +137,30 @@ class O3_ARM_v7a_3(DerivO3CPU):
     iewToRenameDelay = 1
     commitToRenameDelay = 1
     commitToIEWDelay = 1
-    fetchWidth = 4
-    fetchBufferSize = 16
-    fetchToDecodeDelay = 1
-    decodeWidth = 4
-    decodeToRenameDelay = 1
-    renameWidth = 4
+    fetchWidth = 8
+    fetchBufferSize = 32
+    fetchToDecodeDelay = 3
+    decodeWidth = 8
+    decodeToRenameDelay = 2
+    renameWidth = 8
     renameToIEWDelay = 1
     issueToExecuteDelay = 1
-    dispatchWidth = 8
-    issueWidth = 8
-    wbWidth = 8
+    dispatchWidth = 12
+    issueWidth = 12
+    wbWidth = 12
     fuPool = O3_ARM_v7a_FUP()
     iewToCommitDelay = 1
     renameToROBDelay = 1
-    commitWidth = 8
-    squashWidth = 8
+    commitWidth = 12
+    squashWidth = 12
     trapLatency = 13
     backComSize = 5
     forwardComSize = 5
-    numPhysIntRegs = 256
-    numPhysFloatRegs = 256
-    numPhysVecRegs = 256
-    numIQEntries = 120
-    numROBEntries = 128
+    numPhysIntRegs = 384
+    numPhysFloatRegs = 384
+    numPhysVecRegs = 384
+    numIQEntries = 180
+    numROBEntries = 192
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
