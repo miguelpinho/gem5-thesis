@@ -71,6 +71,9 @@ def setCPUClass(options):
        depending on the options provided.
     """
 
+    if options.cpu_path is not None:
+        CpuConfig.load_cpu(options.cpu_path)
+
     TmpClass, test_mem_mode = getCPUClass(options.cpu_type)
     CPUClass = None
     if TmpClass.require_caches() and \
