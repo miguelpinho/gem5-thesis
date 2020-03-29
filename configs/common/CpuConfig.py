@@ -39,9 +39,11 @@ from __future__ import print_function
 
 from m5 import fatal
 import m5.objects
+from m5.defines import buildEnv
 import inspect
 import sys
 from textwrap import TextWrapper
+from importlib import import_module
 
 # Dictionary of mapping names of real CPU models to classes.
 _cpu_classes = {}
@@ -125,13 +127,23 @@ def config_etrace(cpu_cls, cpu_list, options):
         fatal("%s does not support data dependency tracing. Use a CPU model of"
               " type or inherited from DerivO3CPU.", cpu_cls)
 
+def load_cpu(package_path):
+    try:
+        package = import_module(".cores.custom." +
+                                package_path, package=__package__)
+    except ImportError:
+        fatal('Alternative cpu package not found: %s', package_path)
+        return
+
+    for mod_name, module in inspect.getmembers(package, inspect.ismodule):
+        for name, cls in inspect.getmembers(module, is_cpu_class):
+            _cpu_classes[name] = cls
+
+
 # Add all CPUs in the object hierarchy.
 for name, cls in inspect.getmembers(m5.objects, is_cpu_class):
     _cpu_classes[name] = cls
 
-
-from m5.defines import buildEnv
-from importlib import import_module
 for package in [ "generic", buildEnv['TARGET_ISA']]:
     try:
         package = import_module(".cores." + package, package=__package__)
