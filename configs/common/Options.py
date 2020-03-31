@@ -151,6 +151,8 @@ def addCommonOptions(parser):
     parser.add_option("--cpu-type", type="choice", default="AtomicSimpleCPU",
                       choices=CpuConfig.cpu_names(),
                       help = "type of cpu to run with")
+    parser.add_option("--cpu-path", default=None,
+                      help = "path to custom CPU configs")
     parser.add_option("--list-bp-types",
                       action="callback", callback=_listBPTypes,
                       help="List available branch predictor types")
