@@ -159,8 +159,8 @@ class O3_ARM_v7a_3(DerivO3CPU):
     numPhysIntRegs = 480
     numPhysFloatRegs = 480
     numPhysVecRegs = 480
-    numIQEntries = 225
-    numROBEntries = 240
+    numIQEntries = 180
+    numROBEntries = 192
 
     switched_out = False
     branchPred = O3_ARM_v7a_BP()
